@@ -320,3 +320,8 @@ Layup
     max-width: 1600px;
     padding:0 1em;
 }
+
+#sidebar_left ul li img.menu-thumbnail {
+    float: none;
+    margin-right: 0;
+}
