@@ -1,8 +1,67 @@
-<div class="product-box">
-    <a href="{{ path('sylius_product_show', {'slug': product.slug}) }}"><h3>{{ product.name|truncate(20) }}</h3></a>
-    <a class="thumbnail" href="{{ path('sylius_product_show', {'slug': product.slug}) }}">
-        <img  src="{{ product.image.path|default('http://placehold.it/250x250')|imagine_filter('sylius_262x255') }}" alt="{{ product.name }}" />
-        <span class="label">{{ product.price|sylius_money }}</span>
-        <button class="btn btn-success"><i class="icon-shopping-cart icon-white"></i> {{ 'sylius.add_to_cart'|trans }}</button>
-    </a>
-</div>
+
+
+<article itemscope itemtype="http://schema.org/Product"> 
+	<h3 itemprop="name">{{ product.name|truncate(20) }}</h3>
+	<div class="pgrd-content">
+		<label class="turn  pgrd-icon" for="turn{{ product.slug }}">&#8634;</label>
+		<input type="checkbox" id="turn{{ product.slug }}" />
+		<div class="pgrd-item txtcenter">
+			<a href="{{ path('sylius_product_show', {'slug': product.slug}) }}" title="Show product" itemprop="url">
+				<img alt="{{ product.name }}"  itemprop="image" src="{{ product.image.path|default('http://placehold.it/262x255')|imagine_filter('sylius_262x255') }}">
+				<img class="img2 center" src="http://placehold.it/262x255">
+			</a>
+			<div class="pgrd-description" itemprop="description">
+		        <p>{{ product.shortDescription|default('sylius.product.no_description'|trans)|raw }}</p>
+			</div><!--/end .description-->
+		</div>
+        <form action="{{ path('sylius_cart_item_add', {'id': product.id}) }}" method="post" class="clearfix">
+
+		{% set form = sylius_cart_form({'product': product}) %}
+		{{ form_widget(form.quantity, {'attr': {'class': 'center-text'}, 'empty_value': '1', 'type': 'hidden'}) }}
+		{{ form_widget(form._token) }}
+                    
+
+		<ul class="pgrd-options">
+			<li class="pgrd-optcompare"><a class=" pgrd-icon" href="{{ path('sylius_product_show', {'slug': product.slug}) }}" title="Compare product">&#119598;</a></li>
+			<li class="pgrd-optfav"><a class=" pgrd-icon" href="{{ path('sylius_product_show', {'slug': product.slug}) }}" title="Add product to loved list"> 	&#9829;</a></li>
+        	{% if product.hasOptions %}
+	        	{% if product.isVariantSelectionMethodChoice %}
+                    <li class="pgrd-variant">
+                    	<div class="pgrd-select">Variant</div>
+                    	<div class="pgrd-selectlist">
+		                    {% for variant in product.variants if variant.available %}
+	                            {% if variant.presentation is empty %}
+	                            <ul class="unstyled">
+	                                {% for option in variant.options %}
+	                                <li><strong>{{ option.presentation }}</strong>: {{ option.value }}</li>
+	                                {% endfor %}
+	                            </ul>
+	                            {% else %}
+	                                {{ variant.presentation }}
+	                            {% endif %}
+	                            <span class="label label-success">{{ variant.price|sylius_money }}</span>
+		                        {% if sylius_inventory_is_available(variant) %}
+		                            {{ form_widget(form.variant[loop.index0]) }}
+		                        {% else %}
+		                            <span class="label label-important">{{ 'sylius.out_of_stock'|trans }}</span>
+		                        {% endif %}
+	                        {% endfor %}
+                    	</div>
+                    </li>
+	            {% else %}
+{#}                    <li class="pgrd-variant">{{ form_widget(form.variant[loop.index0]) }}</li> #}
+	        	{% endif %}
+            {% endif %}
+			<li class="pgrd-optcart">
+	            {% if not sylius_inventory_is_available(product.masterVariant) %}
+	            	No stock
+	            {% else %}
+					<button type="submit" class="addtocart pgrd-icon"><span>&#8628;</span>&#9141;</button>
+	            {% endif %}
+			</li>
+		</ul>		
+        </form>
+	</div>
+	<span  itemprop="price" class="pgrd-price">{{ product.price|sylius_money }}</span>
+
+</article>

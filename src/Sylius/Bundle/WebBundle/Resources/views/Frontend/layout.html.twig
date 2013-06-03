@@ -1,15 +1,19 @@
-<!DOCTYPE html>
-
-{% set settings = sylius_settings_all('general') %}
-
-<html>
+<!doctype html>
+<!--[if lte IE 6]> <html class="no-js ie6 ie67 ie678" lang="fr"> <![endif]-->
+<!--[if IE 7]> <html class="no-js ie7 ie67 ie678" lang="fr"> <![endif]-->
+<!--[if IE 8]> <html class="no-js ie8 ie678" lang="fr"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="fr"> <!--<![endif]-->
     <head>
+
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=10">
         <title>
             {% block title %}
                 {{ settings.title|default('sylius.meta.frontend_title'|trans) }}
             {% endblock %}
         </title>
-        <meta charset="UTF-8">
+        <meta name="viewport" content="initial-scale=1.0">
+        
         <meta name="description" content="{{ settings.meta_description|default('sylius.meta.frontend_description'|trans) }}">
         <meta name="keywords" content="{{ settings.meta_keywords|default('sylius.meta.frontend_keywords'|trans) }}">
 
@@ -21,24 +25,40 @@
         {# stylesheets... #}
         {% block stylesheets %}
         {% stylesheets output='assets/compiled/frontend.css' filter='cssrewrite'
-            '//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap.no-icons.min.css'
-            '//netdna.bootstrapcdn.com/font-awesome/3.0/css/font-awesome.css'
+            'http://fonts.googleapis.com/css?family=Montserrat'
+            '@SyliusWebBundle/Resources/assets/css/knacss.css'
             '@SyliusWebBundle/Resources/assets/css/frontend.css'
-            '@SyliusWebBundle/Resources/assets/css/bootstrap-image-gallery.css'
         %}
             <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
         {% endstylesheets %}
         {% endblock %}
     </head>
     <body>
-        <div class="container">
+
+
+        <div class="container center">
         {% block header %}
-            <div class="masthead pull-right">
+            <h1 class="left"><a href="{{ path('sylius_homepage') }}" title="{{ 'sylius.logo'|trans }}"><img src="{{ asset('assets/img/logo.png') }}" alt="{{ 'sylius.logo'|trans }}"><span>{{ 'sylius.logo'|trans }}</span></a></h1>
+            <div class="right">
                 {{ knp_menu_render('sylius.frontend.main', {'template': 'SyliusWebBundle:Frontend:menu.html.twig'}) }}
             </div>
-            <h1 class="logo"><a href="{{ path('sylius_homepage') }}" title="{{ 'sylius.logo'|trans }}"><img src="{{ asset('assets/img/logo.png') }}" alt="{{ 'sylius.logo'|trans }}"><span>{{ 'sylius.logo'|trans }}</span></a></h1>
-        {% endblock %}
+            <div class="txtcenter">
+                <h1>{{ 'sylius.homepage.splash.headline'|trans }}</h1>
+                <p class="lead">{{ 'sylius.homepage.splash.subheadline'|trans }}</p>
+            </div>
 
+        {% endblock %}
+        </div>
+
+        <div class="menuline">
+            <div class="container center">
+                <span class="icon icon-nav">Menu</span>
+                {{ knp_menu_render('sylius.frontend.taxonomies', {'template': 'SyliusWebBundle:Frontend:menu.html.twig'}) }}
+            </div>
+        </div>
+                    {# render(url('sylius_partial_product_latest', {'limit': 5, 'template': 'SyliusWebBundle:Frontend/Product:latestSidebar.html.twig'})) #}
+
+        <div class="container center">
         {% for name, flashes in app.session.flashbag.all if name in ['success', 'error'] %}
             {% for flash in flashes %}
                 <div class="alert alert-{{ name }}">
@@ -48,44 +68,33 @@
             {% endfor %}
         {% endfor %}
 
-        <hr>
-        <div id="sidebar_left" class="row-fluid">
-            <div class="row-fluid">
-                <div class="span3">
-                    <h4>{{ 'sylius.shop_by'|trans }}</h4>
-                    {{ knp_menu_render('sylius.frontend.taxonomies', {'template': 'SyliusWebBundle:Frontend:menu.html.twig'}) }}
-                    {{ render(url('sylius_partial_product_latest', {'limit': 5, 'template': 'SyliusWebBundle:Frontend/Product:latestSidebar.html.twig'})) }}
-                </div>
-                <div class="span9">
-                {% block content %}
-                {% endblock %}
-                </div>
-            </div>
-        </div>
-        <hr>
+        {% block content %}
+        {% endblock %}
 
-        {% include 'SyliusWebBundle::gallery.html.twig' %}
+        {#% include 'SyliusWebBundle::gallery.html.twig' %#}
+
+        </div>
 
         {% block footer %}
-            <div class="footer">
+        <div class="menuline">
+            <div class="container center footer">
                 <p class="muted">
                     &copy; Sylius, 2011 - {{ 'now'|date('Y') }}.
                 </p>
                 {{ knp_menu_render('sylius.frontend.social', {'template': 'SyliusWebBundle:Frontend:menu.html.twig'}) }}
             </div>
-        {% endblock %}
         </div>
-
+        {% endblock %}
         {# javascripts... #}
         {% block javascripts %}
+        {#
         {% javascripts output='assets/compiled/frontend.js'
             'http://code.jquery.com/jquery-1.8.0.min.js'
-            'http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js'
             '@SyliusWebBundle/Resources/assets/js/load-image.js'
-            '@SyliusWebBundle/Resources/assets/js/bootstrap-image-gallery.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}
+        {% endjavascripts %}   
+         #}
         {% endblock %}
     </body>
 </html>
