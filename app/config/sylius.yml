@@ -9,6 +9,7 @@ sylius_installer:
 sylius_money:
     currency: %sylius.currency%
     locale: %sylius.locale%
+    driver: doctrine/orm
 
 sylius_cart:
     driver: doctrine/orm
