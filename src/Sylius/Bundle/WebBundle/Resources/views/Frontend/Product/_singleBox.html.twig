@@ -27,29 +27,31 @@
         	{% if product.hasOptions %}
 	        	{% if product.isVariantSelectionMethodChoice %}
                     <li class="pgrd-variant">
-                    	<div class="pgrd-select">Variant</div>
-                    	<div class="pgrd-selectlist">
-		                    {% for variant in product.variants if variant.available %}
-	                            {% if variant.presentation is empty %}
-	                            <ul class="unstyled">
-	                                {% for option in variant.options %}
-	                                <li><strong>{{ option.presentation }}</strong>: {{ option.value }}</li>
-	                                {% endfor %}
-	                            </ul>
-	                            {% else %}
-	                                {{ variant.presentation }}
-	                            {% endif %}
-	                            <span class="label label-success">{{ variant.price|sylius_money }}</span>
-		                        {% if sylius_inventory_is_available(variant) %}
-		                            {{ form_widget(form.variant[loop.index0]) }}
-		                        {% else %}
-		                            <span class="label label-important">{{ 'sylius.out_of_stock'|trans }}</span>
-		                        {% endif %}
-	                        {% endfor %}
+                    	<div class="pgrd-select"><span class="pgrd-icon">&#119612;</span>
+	                    	<div class="pgrd-selectlist">
+			                    {% for variant in product.variants if variant.available %}
+	                                {% set label = 'popo' %}
+		                            {% if variant.presentation is empty %}
+		                                {% for option in variant.options %}
+		                                	{% set label = option.value %} {# ~ '<small> (' ~ variant.price|sylius_money ~ ')</small> -' ~ option.presentation ~ #}
+		                                {% endfor %}
+		                            {% else %}
+		                                {% set label = variant.presentation %}
+		                            {% endif %}
+			                        {% if sylius_inventory_is_available(variant) %}
+			                            <label>
+				                            {{ form_widget(form.variant[loop.index0] ) }}
+			                            	<div>{{ label|raw }}</div>
+			                            </label>
+			                        {% else %}
+			                            <span class="label label-important">{{ 'sylius.out_of_stock'|trans }}</span>
+			                        {% endif %}
+		                        {% endfor %}
+	                    	</div>
                     	</div>
                     </li>
 	            {% else %}
-{#}                    <li class="pgrd-variant">{{ form_widget(form.variant[loop.index0]) }}</li> #}
+                    <li class="pgrd-variant">{{ form_widget(form.variant) }}</li> 
 	        	{% endif %}
             {% endif %}
 			<li class="pgrd-optcart">
@@ -62,6 +64,6 @@
 		</ul>		
         </form>
 	</div>
-	<span  itemprop="price" class="pgrd-price">{{ product.price|sylius_money }}</span>
+	<span itemprop="price" class="pgrd-price"><a href="{{ path('sylius_product_show', {'slug': product.slug}) }}">{{ product.price|sylius_money }}</a></span>
 
 </article>

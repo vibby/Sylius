@@ -35,8 +35,7 @@
     </head>
     <body>
 
-
-        <div class="container center">
+        <header class="container center">
         {% block header %}
             <h1 class="left"><a href="{{ path('sylius_homepage') }}" title="{{ 'sylius.logo'|trans }}"><img src="{{ asset('assets/img/logo.png') }}" alt="{{ 'sylius.logo'|trans }}"><span>{{ 'sylius.logo'|trans }}</span></a></h1>
             <div class="right">
@@ -48,16 +47,17 @@
             </div>
 
         {% endblock %}
-        </div>
+        </header>
 
-        <div class="menuline">
+        <nav class="menuline">
             <div class="container center">
                 <span class="icon icon-nav">Menu</span>
                 {{ knp_menu_render('sylius.frontend.taxonomies', {'template': 'SyliusWebBundle:Frontend:menu.html.twig'}) }}
             </div>
-        </div>
+        </nav>
                     {# render(url('sylius_partial_product_latest', {'limit': 5, 'template': 'SyliusWebBundle:Frontend/Product:latestSidebar.html.twig'})) #}
 
+        <nav class="mainline">
         <div class="container center">
         {% for name, flashes in app.session.flashbag.all if name in ['success', 'error', 'fos_user_success'] %}
             {% for flash in flashes %}
@@ -72,16 +72,17 @@
         {% endblock %}
 
         </div>
+        </div>
 
         {% block footer %}
-        <div class="menuline">
+        <footer class="menuline">
             <div class="container center footer">
                 <p class="muted">
                     &copy; Sylius, 2011 - {{ 'now'|date('Y') }}.
                 </p>
                 {{ knp_menu_render('sylius.frontend.social', {'template': 'SyliusWebBundle:Frontend:menu.html.twig'}) }}
             </div>
-        </div>
+        </footer>
         {% endblock %}
         {# javascripts... #}
         {% block javascripts %}
