@@ -15,8 +15,9 @@ h1 a {
     text-decoration: none;
 }
 .mainline {
-    background-color: #faefe8;
-    background-image: repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(255,255,255,.5) 35px, rgba(255,255,255,.5) 70px);
+    background-color: #F9EFE8;
+    background-image:         repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(255,255,255,.5) 35px, rgba(255,255,255,.5) 70px);
+    background-image: -webkit-repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(255,255,255,.5) 35px, rgba(255,255,255,.5) 70px)
 }
 
 
@@ -112,6 +113,12 @@ Menu
     padding: 1em 2em;
 }
 .menuline ul ul{
+    left: 0;
+    position: absolute;
+    width: 100%; 
+    background: #8C3503;
+    display: table-row;
+/*
     display: none;
     position: absolute;
     background: #fff;
@@ -122,9 +129,10 @@ Menu
     border-color: rgba()#8C3503;
     border-top-width: 0;
     border-radius: 0 0 .6em .6em;
+    */
 }
-.menuline ul ul li li{
-    display: block;
+.menuline ul ul li{
+    display: table-cell;
 }
 .menuline li:hover>ul{
     display: block;
@@ -214,34 +222,24 @@ Menu
 .pgrd-options {
     display: table;
     border-top: 4px solid #BF6B04;
-    width: 100%;
     padding: 0;
     margin: 0;
 }
-.pgrd-options li{
-    list-style: none;
-    display: inline;
-    display: table-cell;
-    height: 3em;
+.pgrd-options>*{
+    border: 0;
     border-left: 4px solid #BF6B04;
-    vertical-align: top;
-}
-.pgrd-options li>*{
+    vertical-align: middle;
     text-align: center;
-    width: 100%;
-    display: block;
-    border: none;
     text-decoration: none;
     color: #BF6B04;
     padding: 0;
-    height: 100%;
 }
-.pgrd-options li:hover>*{
+.pgrd-options>*:hover>*{
     background: #BF6B04;
     color: #fff;
     cursor: pointer;
 }
-.pgrd-options li:first-child{
+.pgrd-options>*:first-child{
     border-left: none;
 }
 .pgrd-options .pgrd-selectlist label>div{
@@ -260,6 +258,13 @@ Menu
     left: .4em;
     top: .4em;
 }
+.pgrd-options button{
+    min-height: 1px;
+    width: 100%;
+}
+.pgrd-options>*{
+    background: #fff;
+ }
 .pgrd-options .pgrd-selectlist input:checked+*, .pgrd-options .pgrd-selectlist label:hover>input:checked+*{
     background-color: #E4A531;
     color: #000;
@@ -308,6 +313,7 @@ Menu
     position: relative;
     text-decoration: none;
     transform: rotate(3deg);
+    -webkit-transform: rotate(3deg);
 }
 .addtocart span{
     position: relative;

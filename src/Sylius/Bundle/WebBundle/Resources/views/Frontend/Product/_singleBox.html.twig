@@ -14,19 +14,14 @@
 		        <p>{{ product.shortDescription|default('sylius.product.no_description'|trans)|raw }}</p>
 			</div><!--/end .description-->
 		</div>
-        <form action="{{ path('sylius_cart_item_add', {'id': product.id}) }}" method="post" class="clearfix">
+        <form action="{{ path('sylius_cart_item_add', {'id': product.id}) }}" method="post" class="pgrd-options row">
 
 		{% set form = sylius_cart_form({'product': product}) %}
-		{{ form_widget(form.quantity, {'attr': {'class': 'center-text'}, 'empty_value': '1', 'type': 'hidden'}) }}
-		{{ form_widget(form._token) }}
                     
-
-		<ul class="pgrd-options">
-			<li class="pgrd-optcompare"><a class=" pgrd-icon" href="{{ path('sylius_product_show', {'slug': product.slug}) }}" title="Compare product">&#119598;</a></li>
-			<li class="pgrd-optfav"><a class=" pgrd-icon" href="{{ path('sylius_product_show', {'slug': product.slug}) }}" title="Add product to loved list"> 	&#9829;</a></li>
+			<a class=" pgrd-icon" href="{{ path('sylius_product_show', {'slug': product.slug}) }}" title="Compare product">&#119598;</a>
+			<a class=" pgrd-icon" href="{{ path('sylius_product_show', {'slug': product.slug}) }}" title="Add product to loved list"> 	&#9829;</a>
         	{% if product.hasOptions %}
 	        	{% if product.isVariantSelectionMethodChoice %}
-                    <li class="pgrd-variant">
                     	<div class="pgrd-select"><span class="pgrd-icon">&#119612;</span>
 	                    	<div class="pgrd-selectlist">
 			                    {% for variant in product.variants if variant.available %}
@@ -49,19 +44,18 @@
 		                        {% endfor %}
 	                    	</div>
                     	</div>
-                    </li>
 	            {% else %}
-                    <li class="pgrd-variant">{{ form_widget(form.variant) }}</li> 
+                    {{ form_widget(form.variant) }}
 	        	{% endif %}
             {% endif %}
-			<li class="pgrd-optcart">
 	            {% if not sylius_inventory_is_available(product.masterVariant) %}
-	            	No stock
+	            	<span>No stock</span>
 	            {% else %}
 					<button type="submit" class="addtocart pgrd-icon"><span>&#8628;</span>&#9141;</button>
 	            {% endif %}
-			</li>
-		</ul>		
+			{{ form_widget(form.quantity, {'attr': {'class': 'center-text'}, 'empty_value': '1', 'type': 'hidden'}) }}
+			{{ form_widget(form._token) }}
+	
         </form>
 	</div>
 	<span itemprop="price" class="pgrd-price"><a href="{{ path('sylius_product_show', {'slug': product.slug}) }}">{{ product.price|sylius_money }}</a></span>
