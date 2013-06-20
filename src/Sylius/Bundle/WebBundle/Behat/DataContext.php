@@ -20,7 +20,6 @@ use Sylius\Bundle\AddressingBundle\Model\ZoneInterface;
 use Sylius\Bundle\CoreBundle\Entity\User;
 use Sylius\Bundle\ShippingBundle\Calculator\DefaultCalculators;
 use Symfony\Component\EventDispatcher\GenericEvent;
-use Symfony\Component\Form\Util\FormUtil;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Locale\Locale;
 use Symfony\Component\PropertyAccess\StringUtil;
@@ -133,21 +132,33 @@ class DataContext extends BehatContext implements KernelAwareInterface
 
         foreach ($table->getHash() as $data) {
             $this->thereIsUser(
-                $data['username'],
+                $data['email'],
                 isset($data['password']) ? $data['password'] : $this->faker->word(),
                 'ROLE_USER',
-                isset($data['enabled']) ? $data['enabled'] : true
+                isset($data['enabled']) ? $data['enabled'] : true,
+                $data['address']
             );
         }
     }
 
-    public function thereIsUser($username, $password, $role = null, $enabled = 'yes')
+    public function thereIsUser($email, $password, $role = null, $enabled = 'yes', $address = null)
     {
+        $addressData = explode(',', $address);
+        $addressData = array_map('trim', $addressData);
+
         $user = new User();
-        $user->setUsername($username);
-        $user->setEmail($this->faker->email());
+
+        $user->setFirstname($this->faker->firstName);
+        $user->setLastname($this->faker->lastName);
+        $user->setFirstname(null === $address ? $this->faker->firstName : $addressData[0]);
+        $user->setLastname(null === $address ? $this->faker->lastName : $addressData[1]);
+        $user->setEmail($email);
         $user->setEnabled('yes' === $enabled);
         $user->setPlainPassword($password);
+
+        if (null !== $address) {
+            $user->setShippingAddress($this->createAddress($address));
+        }
 
         if (null !== $role) {
             $user->addRole($role);
@@ -582,6 +593,34 @@ class DataContext extends BehatContext implements KernelAwareInterface
     }
 
     /**
+     * @Given /^there are following exchange rates:$/
+     */
+    public function thereAreExchangeRates(TableNode $table)
+    {
+        foreach ($table->getHash() as $data) {
+            $this->thereIsExchangeRate($data['currency'], $data['rate']);
+        }
+    }
+
+    /**
+     * @Given /^I created exchange rate "([^""]*)"$/
+     */
+    public function thereIsExchangeRate($currency, $rate = 1)
+    {
+        $repository = $this->getRepository('exchange_rate');
+        $manager = $this->getEntityManager();
+
+        $exchangeRate = $repository->createNew();
+        $exchangeRate->setCurrency($currency);
+        $exchangeRate->setRate($rate);
+
+        $manager->persist($exchangeRate);
+        $manager->flush();
+
+        return $exchangeRate;
+    }
+
+    /**
      * @Given /^the following shipping categories are configured:$/
      * @Given /^the following shipping categories exist:$/
      * @Given /^there are following shipping categories:$/
@@ -664,7 +703,7 @@ class DataContext extends BehatContext implements KernelAwareInterface
 
             $enabled = true;
 
-            if(array_key_exists('enabled', $data)) {
+            if (array_key_exists('enabled', $data)) {
                 $enabled = 'yes' === trim($data['enabled']);
             }
 

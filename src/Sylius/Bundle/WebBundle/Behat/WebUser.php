@@ -18,9 +18,7 @@ use Behat\MinkExtension\Context\MinkContext;
 use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Exception\ExpectationException;
 use Behat\Symfony2Extension\Context\KernelAwareInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Locale\Locale;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
@@ -386,7 +384,28 @@ class WebUser extends MinkContext implements KernelAwareInterface
      */
     public function iFillInCheckoutAddress($type, $country)
     {
+        $this->iFillInAddress('sylius_checkout_addressing', $type, $country);
         $base = sprintf('sylius_checkout_addressing[%sAddress]', $type);
+
+        $this->fillField($base.'[firstName]', 'John');
+        $this->fillField($base.'[lastName]', 'Doe');
+        $this->fillField($base.'[street]', 'Pvt. Street 15');
+        $this->fillField($base.'[city]', 'Lodz');
+        $this->fillField($base.'[postcode]', '95-253');
+        $this->selectOption($base.'[country]', $country);
+    }
+
+    /**
+     * @Given /^I fill in the users (billing|shipping) address to (.+)$/
+     */
+    public function iFillInUserAddress($type, $country)
+    {
+        $this->iFillInAddress('sylius_user', $type, $country);
+    }
+
+    protected function iFillInAddress($prefix, $type, $country)
+    {
+        $base = sprintf('%s[%sAddress]', $prefix, $type);
 
         $this->fillField($base.'[firstName]', 'John');
         $this->fillField($base.'[lastName]', 'Doe');
@@ -444,6 +463,14 @@ class WebUser extends MinkContext implements KernelAwareInterface
         $this->assertSession()->elementExists('xpath', sprintf(
             "//div[contains(@class, 'error')]//label[text()[contains(., '%s')]]", ucfirst($field)
         ));
+    }
+
+    /**
+     * @Then /^I should see product prices in "([^"]*)"$/
+     */
+    public function iShouldSeeProductPricesIn($currency)
+    {
+        $this->assertSession()->elementExists('css', sprintf('span.label:contains("%s")', $currency));
     }
 
     /**
@@ -636,10 +663,10 @@ class WebUser extends MinkContext implements KernelAwareInterface
      */
     private function iAmLoggedInAsRole($role)
     {
-        $this->getSubContext('data')->thereIsUser('username', 'password', $role);
+        $this->getSubContext('data')->thereIsUser('email@foo.com', 'password', $role);
         $this->getSession()->visit($this->generatePageUrl('fos_user_security_login'));
 
-        $this->fillField('Login', 'username');
+        $this->fillField('Email', 'email@foo.com');
         $this->fillField('Password', 'password');
         $this->pressButton('login');
     }

@@ -28,7 +28,7 @@ class User extends BaseUser implements TimestampableInterface
     protected $lastName;
     protected $createdAt;
     protected $updatedAt;
-
+    protected $currency;
     protected $orders;
     protected $billingAddress;
     protected $shippingAddress;
@@ -41,6 +41,16 @@ class User extends BaseUser implements TimestampableInterface
         $this->addresses = new ArrayCollection();
 
         parent::__construct();
+    }
+
+    public function getCurrency()
+    {
+        return $this->currency;
+    }
+
+    public function setCurrency($currency)
+    {
+        $this->currency = $currency;
     }
 
     /**
@@ -56,7 +66,7 @@ class User extends BaseUser implements TimestampableInterface
     /**
      * Set billingAddress
      *
-     * @param AddressInterface $billingAddress
+     * @param  AddressInterface $billingAddress
      * @return User
      */
     public function setBillingAddress(AddressInterface $billingAddress = null)
@@ -64,7 +74,7 @@ class User extends BaseUser implements TimestampableInterface
         $this->billingAddress = $billingAddress;
 
         if (null !== $billingAddress && !$this->hasAddress($billingAddress)) {
-        	$this->addAddress($billingAddress);
+            $this->addAddress($billingAddress);
         }
 
         return $this;
@@ -83,7 +93,7 @@ class User extends BaseUser implements TimestampableInterface
     /**
      * Set shippingAddress
      *
-     * @param AddressInterface $shippingAddress
+     * @param  AddressInterface $shippingAddress
      * @return User
      */
     public function setShippingAddress(AddressInterface $shippingAddress = null)
@@ -91,7 +101,7 @@ class User extends BaseUser implements TimestampableInterface
         $this->shippingAddress = $shippingAddress;
 
         if (null !== $shippingAddress && !$this->hasAddress($shippingAddress)) {
-        	$this->addAddress($shippingAddress);
+            $this->addAddress($shippingAddress);
         }
 
         return $this;
@@ -110,7 +120,7 @@ class User extends BaseUser implements TimestampableInterface
     /**
      * Add address
      *
-     * @param AddressInterface $address
+     * @param  AddressInterface $address
      * @return User
      */
     public function addAddress(AddressInterface $address)
@@ -135,7 +145,7 @@ class User extends BaseUser implements TimestampableInterface
     /**
      * Has address
      *
-     * @param AddressInterface $addresses
+     * @param  AddressInterface $addresses
      * @return bool
      */
     public function hasAddress(AddressInterface $address)
@@ -191,5 +201,21 @@ class User extends BaseUser implements TimestampableInterface
     public function setUpdatedAt(DateTime $updatedAt)
     {
         $this->updatedAt = $updatedAt;
+    }
+    
+    public function setEmail($email)
+    {
+        parent::setEmail($email);
+        $this->setUsername($email);
+
+        return $this;
+    }
+
+    public function setEmailCanonical($emailCanonical)
+    {
+        parent::setEmailCanonical($emailCanonical);
+        $this->setUsernameCanonical($emailCanonical);
+
+        return $this;
     }
 }
