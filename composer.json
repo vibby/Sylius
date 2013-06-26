@@ -52,7 +52,7 @@
         "jms/serializer-bundle":                "0.12.*",
         "friendsofsymfony/user-bundle":         "2.0.*@dev",
         "knplabs/knp-gaufrette-bundle":         "0.2.*",
-        "fzaninotto/faker":                     "1.1.*",
+        "fzaninotto/faker":                     "1.2.*",
         "knplabs/knp-menu-bundle":              "2.0.*",
         "liip/imagine-bundle":                  "0.9.*",
         "athari/yalinqo":                       "*"
