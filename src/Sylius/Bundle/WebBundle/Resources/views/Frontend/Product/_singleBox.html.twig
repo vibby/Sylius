@@ -14,7 +14,8 @@
 		        <p>{{ product.shortDescription|default('sylius.product.no_description'|trans)|raw }}</p>
 			</div><!--/end .description-->
 		</div>
-        <form action="{{ path('sylius_cart_item_add', {'id': product.id}) }}" method="post" class="pgrd-options row">
+		<div class="pgrd-options-cont">
+        <form action="{{ path('sylius_cart_item_add', {'id': product.id}) }}" method="post" class="pgrd-options">
 
 		{% set form = sylius_cart_form({'product': product}) %}
                     
@@ -57,6 +58,7 @@
 			{{ form_widget(form._token) }}
 	
         </form>
+		</div>
 	</div>
 	<span itemprop="price" class="pgrd-price"><a href="{{ path('sylius_product_show', {'slug': product.slug}) }}">{{ product.price|sylius_money }}</a></span>
 

@@ -219,28 +219,36 @@ Menu
 .turn+input:checked+div img.img2{
     display: block;
 }
-.pgrd-options {
+.pgrd-options-cont {
     display: table;
+    width: 100%;
     border-top: 4px solid #BF6B04;
+}
+.pgrd-options {
+    display: table-row;
     padding: 0;
     margin: 0;
 }
 .pgrd-options>*{
     border: 0;
-    border-left: 4px solid #BF6B04;
+    border-right: 4px solid #BF6B04;
     vertical-align: middle;
     text-align: center;
     text-decoration: none;
     color: #BF6B04;
     padding: 0;
+    background: #fff;
+    display: table-cell;
+}
+.pgrd-options>*:hover{
+    background: #BF6B04;
+    color: #fff;
+    cursor: pointer;
 }
 .pgrd-options>*:hover>*{
     background: #BF6B04;
     color: #fff;
     cursor: pointer;
-}
-.pgrd-options>*:first-child{
-    border-left: none;
 }
 .pgrd-options .pgrd-selectlist label>div{
     font-size: 1.1em; 
@@ -259,16 +267,15 @@ Menu
     top: .4em;
 }
 .pgrd-options button{
+    border-right: none;
     min-height: 1px;
     width: 100%;
 }
-.pgrd-options>*{
-    background: #fff;
- }
+/*
 .pgrd-options .pgrd-selectlist input:checked+*, .pgrd-options .pgrd-selectlist label:hover>input:checked+*{
     background-color: #E4A531;
     color: #000;
-}
+}*/
 .pgrd-options .pgrd-selectlist label{
     border-top: 4px solid #BF6B04;
     display: block;
@@ -280,10 +287,11 @@ Menu
     background: #fff;
     border: 4px solid #BF6B04;
     border-width: 0 0 4px 4px;
-    bottom: 2.5em;
+    bottom: 3.2em;
     left: -4px;
     display: none; 
     right: 0;
+
 }
 .pgrd-options .pgrd-select:hover .pgrd-selectlist{
     display: block;
@@ -348,7 +356,7 @@ Menu
     }
 }
 
-@media screen and (max-width: 920px) and (min-width: 611px) {
+@media screen and (max-width: 920px) and (min-width: 661px) {
     .productsgrd>* {
         width: 31%;
         margin: 1%  2% 2.5% 0;
@@ -361,7 +369,7 @@ Menu
     }
 }
 
-@media screen and (max-width: 610px) and (min-width: 481px) {
+@media screen and (max-width: 660px) and (min-width: 501px) {
     .productsgrd>* {
         width: 48%;
         margin: 1% 2% 4% 0;
@@ -374,7 +382,7 @@ Menu
     }
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 500px) {
     .productsgrd>* {
         width: 100%;
         margin: 1%  2% 8% 0;
